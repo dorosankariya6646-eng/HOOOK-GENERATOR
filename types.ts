@@ -16,6 +16,7 @@ export interface HookRequest {
   platform: Platform;
   length: LengthCategory;
   language: Language;
+  thunderMode?: boolean;
 }
 
 export interface GeneratedHook {

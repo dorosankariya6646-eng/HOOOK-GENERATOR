@@ -10,6 +10,11 @@ const getAI = () => {
 export const generateHooks = async (req: HookRequest): Promise<GeneratedHook[]> => {
   const ai = getAI();
   
+  let toneInstruction = "The hooks should be: Emotional, curiosity-building, or pattern-interrupting.";
+  if (req.thunderMode) {
+    toneInstruction = "THUNDER MODE ACTIVE: The hooks must be EXTREMELY HIGH-ENERGY, SHOCKING, CONTROVERSIAL, and AGGRESSIVE. Use psychological triggers that make it impossible to scroll past. Focus on intensity and immediate impact.";
+  }
+
   const prompt = `
     Generate 10 to 15 viral social media hooks for a video with the following details:
     - Topic: ${req.topic}
@@ -20,10 +25,10 @@ export const generateHooks = async (req: HookRequest): Promise<GeneratedHook[]> 
     - Duration: ${req.length}
     - Language: ${req.language} (CRITICAL: Output MUST be in this language)
 
-    The hooks should be:
-    - Emotional, curiosity-building, or pattern-interrupting.
-    - Optimized for the algorithm of ${req.platform}.
-    - Highly engaging and designed for maximum watch time.
+    ${toneInstruction}
+
+    Optimized for the algorithm of ${req.platform}.
+    Highly engaging and designed for maximum watch time.
     
     Return a JSON array of objects with 'text' (the hook itself), 'type' (e.g., emotional, curiosity, viral), and 'explanation' (brief reason why it works).
   `;

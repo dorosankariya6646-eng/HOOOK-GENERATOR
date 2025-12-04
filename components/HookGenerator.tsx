@@ -2,12 +2,9 @@ import React, { useState } from 'react';
 import { 
   Check, 
   Copy, 
-  Download, 
-  RefreshCcw, 
   Sparkles, 
   Zap, 
   Layers, 
-  Clock, 
   Globe 
 } from 'lucide-react';
 import { Button } from './Button';
@@ -35,7 +32,8 @@ export const HookGenerator: React.FC = () => {
     videoType: 'Reels',
     platform: 'Instagram',
     length: 'Short (10–30 sec)',
-    language: 'English'
+    language: 'English',
+    thunderMode: false
   });
 
   const [customCategory, setCustomCategory] = useState('');
@@ -74,14 +72,39 @@ export const HookGenerator: React.FC = () => {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
+  const toggleThunderMode = () => {
+    setFormData(prev => ({ ...prev, thunderMode: !prev.thunderMode }));
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-12">
       
       {/* Form Section */}
-      <div className="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 space-y-8">
+      <div className="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-gray-100 space-y-8 relative overflow-hidden transition-all duration-500">
+        
+        {/* Thunder Mode Background Effect */}
+        {formData.thunderMode && (
+          <div className="absolute inset-0 bg-yellow-50/50 pointer-events-none z-0 animate-pulse" />
+        )}
+
+        {/* Header with Thunder Toggle */}
+        <div className="flex justify-between items-center relative z-10">
+          <h2 className="text-xl font-bold text-gray-900">Configure Hooks</h2>
+          <button
+            onClick={toggleThunderMode}
+            className={`flex items-center px-4 py-2 rounded-full text-sm font-bold transition-all duration-300 ${
+              formData.thunderMode 
+                ? 'bg-yellow-400 text-black shadow-lg shadow-yellow-400/50 scale-105' 
+                : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+            }`}
+          >
+            <Zap className={`w-4 h-4 mr-2 ${formData.thunderMode ? 'fill-black' : ''}`} />
+            THUNDER PULSE {formData.thunderMode ? 'ON' : 'OFF'}
+          </button>
+        </div>
         
         {/* Language & Topic */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
           <div className="space-y-3">
             <label className="text-sm font-semibold text-gray-900 uppercase tracking-wider flex items-center">
               <Globe className="w-4 h-4 mr-2" /> Language
@@ -118,7 +141,7 @@ export const HookGenerator: React.FC = () => {
         </div>
 
         {/* Categories */}
-        <div className="space-y-3">
+        <div className="space-y-3 relative z-10">
           <label className="text-sm font-semibold text-gray-900 uppercase tracking-wider flex items-center">
             <Layers className="w-4 h-4 mr-2" /> Category
           </label>
@@ -152,7 +175,7 @@ export const HookGenerator: React.FC = () => {
         </div>
 
         {/* Filters Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10">
           
           {/* Age Group */}
           <div className="space-y-3">
@@ -204,15 +227,15 @@ export const HookGenerator: React.FC = () => {
 
         </div>
 
-        <div className="pt-4">
+        <div className="pt-4 relative z-10">
           <Button 
             variant="thunder" 
-            className="w-full text-lg py-4 shadow-xl shadow-yellow-400/30"
+            className={`w-full text-lg py-4 shadow-xl ${formData.thunderMode ? 'shadow-yellow-400/50 ring-2 ring-yellow-400 ring-offset-2' : 'shadow-yellow-400/30'}`}
             onClick={handleGenerate}
             isLoading={loading}
-            icon={<Zap className="w-5 h-5 fill-black" />}
+            icon={<Zap className={`w-5 h-5 ${formData.thunderMode ? 'fill-black' : 'fill-black'}`} />}
           >
-            GENERATE VIRAL HOOKS
+            {formData.thunderMode ? 'GENERATE HIGH VOLTAGE HOOKS ⚡' : 'GENERATE VIRAL HOOKS'}
           </Button>
         </div>
       </div>
@@ -232,7 +255,11 @@ export const HookGenerator: React.FC = () => {
 
           <div className="grid grid-cols-1 gap-4">
             {hooks.map((hook, idx) => (
-              <div key={idx} className="group relative bg-white p-6 rounded-2xl border border-gray-100 hover:border-yellow-400 hover:shadow-lg transition-all duration-300">
+              <div key={idx} className={`group relative bg-white p-6 rounded-2xl border transition-all duration-300 ${
+                formData.thunderMode 
+                  ? 'border-yellow-400/50 shadow-lg shadow-yellow-400/10' 
+                  : 'border-gray-100 hover:border-yellow-400 hover:shadow-lg'
+              }`}>
                 <div className="absolute top-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button 
                     onClick={() => handleCopy(hook.text, idx)}
@@ -244,12 +271,14 @@ export const HookGenerator: React.FC = () => {
                 </div>
 
                 <div className="flex items-start justify-between mb-2">
-                   <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded bg-gray-100 text-gray-600`}>
+                   <span className={`text-xs font-bold uppercase tracking-wider px-2 py-1 rounded ${
+                     formData.thunderMode ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-600'
+                   }`}>
                     {hook.type}
                   </span>
                 </div>
                 
-                <p className="text-xl font-medium text-gray-900 leading-relaxed font-sans mb-3">
+                <p className={`text-xl font-medium text-gray-900 leading-relaxed font-sans mb-3 ${formData.thunderMode ? 'font-bold' : ''}`}>
                   "{hook.text}"
                 </p>
                 
